@@ -1,0 +1,40 @@
+<?xml version = "1.0"?>
+<project name="makeGenerator" default = "build">
+
+  <!--Paths for diretorys -->
+  <property name="buildDIR" value="./build/"/>
+  <property name="binDIR" value="./bin/"/>
+  <property name="srcDIR" value="./src/"/>
+  <property name="testDIR" value="./test/"/>
+
+
+
+  <!--main target builds the project -->
+  <target name="build" depends="init">
+    <javac srcdir="${srcDIR}" destdir="${binDIR}"/>
+  </target>
+
+  <target name="run">
+    <java fork="true" classname="Main" classpath="./bin"/>
+  </target>
+  <!--Creates need dir for building the project-->
+  <target name="init">
+    <mkdir dir="${binDIR}"/>
+    <mkdir dir="${buildDIR}"/>
+  </target>
+  <!--todo fix when project files are set up -->
+  <target name="test" depends="build-test, build">
+    <junit>
+      <test name="test.unitTests"/>
+    </junit>
+  </target>
+
+  <!--main target builds the project -->
+  <target name="build-test" depends="init">
+    <javac srcdir="${testDIR}" destdir="${binDIR}"/>
+  </target>
+  <target name="clean">
+    <delete dir="${binDIR}"/>
+    <delete dir="${buildDIR}"/>
+  </target>
+</project>
