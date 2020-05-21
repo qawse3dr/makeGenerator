@@ -6,16 +6,22 @@
   <property name="binDIR" value="./bin/"/>
   <property name="srcDIR" value="./src/"/>
   <property name="testDIR" value="./test/"/>
+  <property name="docsDIR" value="./docs/"/>
 
 
+  <path id="lib.path">
+   <fileset dir="/usr/share/java/">
+     <include name="**/*.jar"/>
+   </fileset>
+ </path>
 
   <!--main target builds the project -->
   <target name="build" depends="init">
-    <javac srcdir="${srcDIR}" destdir="${binDIR}"/>
+    <javac includeantruntime="false" srcdir="${srcDIR}" destdir="${binDIR}"/>
   </target>
 
-  <target name="run">
-    <java fork="true" classname="Main" classpath="./bin"/>
+  <target name="run" depends="build">
+    <java fork="true" classname="makeGenerator.Main" classpath="./bin"/>
   </target>
   <!--Creates need dir for building the project-->
   <target name="init">
@@ -24,17 +30,23 @@
   </target>
   <!--todo fix when project files are set up -->
   <target name="test" depends="build-test, build">
-    <junit>
-      <test name="test.unitTests"/>
-    </junit>
+    <java classpath="bin" classpathref="lib.path" classname="tester.TesterMain"/>
   </target>
 
   <!--main target builds the project -->
   <target name="build-test" depends="init">
-    <javac srcdir="${testDIR}" destdir="${binDIR}"/>
+    <javac classpathref="lib.path" includeantruntime="false" srcdir="${testDIR}" destdir="${binDIR}">
+
+    </javac>
   </target>
   <target name="clean">
     <delete dir="${binDIR}"/>
     <delete dir="${buildDIR}"/>
+  </target>
+
+  <target name="docs">
+    <mkdir dir="${docsDIR}"/>
+    <javadoc destdir="${docsDIR}" sourcepath="${srcDIR}"
+       windowtitle="makefile Generator Docs"/>
   </target>
 </project>

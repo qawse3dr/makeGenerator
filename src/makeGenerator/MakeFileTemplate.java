@@ -1,3 +1,4 @@
+package makeGenerator;
 
 public class MakeFileTemplate{
   private String cFlags;
@@ -18,5 +19,7 @@ public class MakeFileTemplate{
   }
 
   /*write to the dest file*/
-  public write()
+  public void write(){
+
+  }
 }
