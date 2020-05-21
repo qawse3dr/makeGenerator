@@ -52,4 +52,42 @@ public class ArgsParserTest{
       fail(e.toString());
     }
   }
+
+  @Test
+  /**Tests failure for no value given at the end of a flag.*/
+  public void noValueForFlag(){
+    System.out.println("Test if it fails when no value is given for a flag at the end");
+    try{
+      ArgsParser parser = new ArgsParser(new String[] {"-o"});
+      fail("no Value was given should have failed");
+    } catch(Exception e){
+      //passes
+    }
+  }
+
+  @Test
+  /**Tests failure for no value given at the end of a flag.*/
+  public void noValueForFlagWithOtherCmd(){
+    System.out.println("Test if it fails when no value is given for a flag");
+    try{
+      ArgsParser parser = new ArgsParser(new String[] {"-o", "-A"});
+      fail("no Value was given should have failed");
+    } catch(Exception e){
+      //passes
+    }
+  }
+
+  @Test
+  /**Tests multiple commands in one statement ie -AE instead of -A -E.*/
+  public void mutiCommand(){
+    System.out.println("Parseing mutiple commands in one statement -AE");
+    try{
+      ArgsParser parser = new ArgsParser(new String[] {"-AE"});
+      assertEquals(parser.getCommands(),"AE");
+    } catch(Exception e){
+      fail(e.toString());
+    }
+  }
+
+
 }

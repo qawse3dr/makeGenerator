@@ -5,9 +5,6 @@ package makeGenerator;
 public class Main{
 
   public static void main(String[] args){
-    for(String str : args){
-      System.out.println(str);
-    }
 
     //tries to parse arguments
     ArgsParser argsParser;
@@ -18,8 +15,13 @@ public class Main{
       return;
     }
 
-    //create and write the makefile
-    MakeFileTemplate mft = new MakeFileTemplate(argsParser);
-    mft.write();
+    try{
+      //create and write the makefile
+      MakeFileTemplate mft = new MakeFileTemplate(argsParser);
+      mft.write();
+    }catch(Exception e){
+      System.out.println(e);
+      return;
+    }
   }
 }

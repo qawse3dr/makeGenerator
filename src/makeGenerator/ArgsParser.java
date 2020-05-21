@@ -30,15 +30,11 @@ public class ArgsParser{
 
 
       if(isValue){
-        //error should be an value not another arg
-        if(string.charAt(0) == '-'){
-          throw new ExpectedArg();
-        }
         flags.put(operation,string);
         isValue = false;
 
       }
-      else if(string.charAt(0) == '-'){
+      else if(string.charAt(0) == '-' && string.length() > 1){
         for(int i = 1; i < string.length(); i++){
 
           //lower case can only be in index 1 else its an error
@@ -59,6 +55,8 @@ public class ArgsParser{
             throw new InvalidSyntax(string);
           }
         }
+      } else{
+        throw new InvalidSyntax(string);
       }
     }
 
