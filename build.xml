@@ -49,4 +49,12 @@
     <javadoc destdir="${docsDIR}" sourcepath="${srcDIR}"
        windowtitle="makefile Generator Docs"/>
   </target>
+
+  <target name="jar">
+    <jar destfile="build/makeGenerator.jar" basedir="bin/" excludes="**/tester">
+      <manifest>
+        <attribute name="Main-Class" value="makeGenerator.Main"/>
+      </manifest>
+    </jar>
+  </target>
 </project>

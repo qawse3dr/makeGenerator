@@ -54,6 +54,19 @@ public class ArgsParserTest{
   }
 
   @Test
+  /**Tests command with quotes as value.*/
+  public void cmdWithQuotes(){
+    System.out.println("Test value passed with args");
+    try{
+      ArgsParser parser = new ArgsParser(new String[] {"-o","output.txt output2.txt"});
+      parser.getFlags().forEach((key,value)-> {assertEquals("Wrong Key","o",key); assertEquals("Wrong Value","output.txt output2.txt",value);});
+
+    } catch(Exception e){
+      fail(e.toString());
+    }
+  }
+
+  @Test
   /**Tests failure for no value given at the end of a flag.*/
   public void noValueForFlag(){
     System.out.println("Test if it fails when no value is given for a flag at the end");
@@ -65,17 +78,6 @@ public class ArgsParserTest{
     }
   }
 
-  @Test
-  /**Tests failure for no value given at the end of a flag.*/
-  public void noValueForFlagWithOtherCmd(){
-    System.out.println("Test if it fails when no value is given for a flag");
-    try{
-      ArgsParser parser = new ArgsParser(new String[] {"-o", "-A"});
-      fail("no Value was given should have failed");
-    } catch(Exception e){
-      //passes
-    }
-  }
 
   @Test
   /**Tests multiple commands in one statement ie -AE instead of -A -E.*/

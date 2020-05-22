@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.io.File;
 public class MakeFileTemplate{
   private String cFlags = "";
-  private String includeDIR = "include";
+  private String includeDIR = "includes";
   private String srcDir = "src";
   private String binDir = "bin";
   private String compiler = "gcc";
-  private ArrayList<String> targets = new ArrayList<String>();
+  private ArrayList<FileInfo> targets = new ArrayList<FileInfo>();
   private boolean debugMode = false;
   private boolean verboseMode = false;
   private boolean sharedLib = false;
@@ -51,7 +51,7 @@ public class MakeFileTemplate{
           break;
         //filePath to project
         case "p":
-          path = entry.getValue();
+          path = entry.getValue() + "/";
           break;
         //flags
         case "f":
@@ -67,23 +67,46 @@ public class MakeFileTemplate{
           break;
         //src dir
         case "s":
-          srcDir = entry.getValue();
+          srcDir = entry.getValue() + "/";
           break;
         case "b":
-          binDir = entry.getValue();
+          binDir = entry.getValue() + "/";
           break;
         case "i":
-          includeDIR = entry.getValue();
+          includeDIR = entry.getValue()+"/";
         default:
           throw new  InvalidOperation(entry.getKey().charAt(0));
       }
     }
 
+    //Maps out the file Struct for src
+    try{
+      getFileStruct(new File(path+srcDir+"/"),null);
+    }catch(Exception e){
+      System.out.println(e);
+    }
+
 
   }
 
-  private void getFileStruct(String path){
+  /**Maps out the file structure.
+   *
+   * @param curPath the file that holds the current file
+   * @param pathString the relative path to the src directory
+  */
+  private void getFileStruct(File curPath, String pathString){
+    if(!curPath.exists()){
+      return;
+    }
+    else if(curPath.isDirectory()){
+      for(File file : curPath.listFiles()){
 
+        getFileStruct(file,(pathString == null)?"":pathString+curPath.getName()+"/");
+
+      }
+    } else{
+      targets.add(new FileInfo(curPath,pathString,this));
+    }
 
   }
 
@@ -91,27 +114,60 @@ public class MakeFileTemplate{
   public void write(){
     try{
       //opens file
-      FileWriter fileWriter = new FileWriter(outputFile);
+      FileWriter fileWriter = new FileWriter(path+outputFile);
       PrintWriter printWriter = new PrintWriter(fileWriter);
 
       //global vars
       printWriter.printf("CC = %s\n",compiler);
       printWriter.printf("CFLAGS = %s\n",cFlags);
-      printWriter.printf("objects = %s\n",String.join(" ",targets));
       printWriter.printf("srcDIR = %s/\n", srcDir);
       printWriter.printf("includeDIR = %s/\n", includeDIR);
       printWriter.printf("binDIR = %s/\n\n", binDir);
+      printWriter.printf("objects = ");
+      for(FileInfo info : targets){
+        printWriter.printf("$(binDIR)%s ",info.getObjName());
+      }
+      printWriter.printf("\n");
+
 
       //main executable
+      printWriter.printf("all:$(binDIR)%s\n\n",executableName);
       printWriter.printf("$(binDIR)%s:$(objects)\n",executableName);
       printWriter.printf("\t$(CC) $(CFLAGS) -I$(includeDIR) %s $(objects) -o $@", (sharedLib)? "-shared": "");
 
+      //write the targets
+      for(FileInfo info : targets){
+        printWriter.printf("\n$(binDIR)%s: %s %s\n", info.getObjName(), info.getSrcName(), info.getIncludes());
+        printWriter.printf("\t$(CC) -c $(CFLAGS) %s -I$(includeDIR) %s -o $@\n",info.getFlags(), info.getSrcName());
+
+      }
+      //write the clean function
+      printWriter.printf("\n\nclean:\n");
+      printWriter.printf("\trm -rf $(binDir)*\n");
+      //write run and memtest
+      printWriter.printf("\nrun: all\n");
+      printWriter.printf("\t./$(binDIR)%s\n",executableName);
+
+      printWriter.printf("\nmemtest: all\n");
+      printWriter.printf("\tvalgrind ./$(binDIR)%s\n",executableName);
       //write file
       printWriter.close();
 
-      for
+
     } catch(Exception e){
       System.out.println(e + " Error Writing To File");
     }
+  }
+
+  //getter and setters
+  public void setPath(String path){
+    this.path = path;
+  }
+  public String getPath(){
+    return path;
+  }
+
+  public String getIncludesDir(){
+    return includeDIR;
   }
 }

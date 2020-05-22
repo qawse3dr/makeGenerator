@@ -25,7 +25,18 @@ public class TesterMain{
       }
     }
 
+    System.out.println("\nMakeFileTemplate's Test");
+    System.out.println("-----------------");
+    res = JUnitCore.runClasses(MakeFileTemplateTest.class);
 
+    System.out.println("\nNumber of Failed Tests = " + res.getFailureCount());
+    if(res.getFailureCount() > 0){
+      System.out.println("Failed Test");
+      System.out.println("-----------");
+      for(Failure fail: res.getFailures()){
+        System.out.println(fail.toString());
+      }
+    }
 
   }
 }
