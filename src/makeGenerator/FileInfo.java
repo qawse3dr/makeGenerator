@@ -17,6 +17,11 @@ public class FileInfo {
    * @param path given path to file
   */
   public FileInfo(File file,String path,MakeFileTemplate mft){
+
+    //verbose output
+    if(mft.verboseMode){
+      System.out.println("Found: " + file.getName());
+    }
     this.path = path;
     this.srcName = file.getName();
     //assume you are using c
@@ -30,14 +35,35 @@ public class FileInfo {
         String line = in.nextLine();
         //custom include
         if(line.startsWith("#include") && line.contains("\"")){
+          if(mft.verboseMode){
+            System.out.println("\tFound Header: " + line.split("\"")[1]);
+          }
           //gets value after first "
           includes.add(line.split("\"")[1]);
           //gets the dependances from the header
           getInfoFromHeader(new File(mft.getPath()+mft.getIncludesDir()+"/"+line.split("\"")[1]),mft);
         }
+        else if(line.toLowerCase().startsWith("/*make")){
+          if(mft.verboseMode){
+            System.out.println("\tFound MakeGenerator cmds in " +srcName);
+          }
+          while(in.hasNextLine() && !line.trim().endsWith("*/")){
+            line = in.nextLine();
+            if(line.contains("flags:")){
+              flags += line.split("flags:")[1];
+              if(mft.verboseMode)System.out.println("Add flag " + line.split("flags:")[1] + " in " + srcName);
+            } else if(line.contains("name:")){
+              objName = line.split("name:")[1].trim();
+              if(mft.verboseMode)System.out.println("new name " + line.split("flags:")[1] + " in " + srcName);
+            }
+
+          }
+        }
       }
     }catch(Exception e){
-      System.out.println(e);
+      if(mft.debugMode){
+        System.out.println(e);
+      }
     } finally{
       if(in != null)in.close();
     }
@@ -55,10 +81,29 @@ public class FileInfo {
         String line = in.nextLine();
         //custom include
         if(line.startsWith("#include") && line.contains("\"")){
+          if(mft.verboseMode){
+            System.out.println("\tFound Header: " + line.split("\"")[1]);
+          }
           //gets value after first "
           includes.add(line.split("\"")[1]);
           //gets the dependances from the header
           getInfoFromHeader(new File(mft.getPath()+mft.getIncludesDir()+"/"+line.split("\"")[1]),mft);
+        }
+        else if(line.toLowerCase().startsWith("/*make")){
+          if(mft.verboseMode){
+            System.out.println("\tFound MakeGenerator cmds in " +srcName);
+          }
+          while(in.hasNextLine() && !line.trim().endsWith("*/")){
+            line = in.nextLine();
+            if(line.contains("flags:")){
+              flags += line.split("flags:")[1];
+              if(mft.verboseMode)System.out.println("Add flag " + line.split("flags:")[1] + " in " + srcName);
+            } else if(line.contains("name:")){
+              objName = line.split("name:")[1].trim();
+              if(mft.verboseMode)System.out.println("new name " + line.split("flags:")[1] + " in " + srcName);
+            }
+
+          }
         }
       }
     }catch(Exception e){

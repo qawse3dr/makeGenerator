@@ -12,8 +12,9 @@ public class MakeFileTemplate{
   private String binDir = "bin";
   private String compiler = "gcc";
   private ArrayList<FileInfo> targets = new ArrayList<FileInfo>();
-  private boolean debugMode = false;
-  private boolean verboseMode = false;
+  private ArrayList<String> dirs = new ArrayList<String>();
+  public boolean debugMode = false;
+  public boolean verboseMode = false;
   private boolean sharedLib = false;
   private String outputFile = "makefile";
   private String executableName = "a.out";
@@ -29,10 +30,12 @@ public class MakeFileTemplate{
         //debugMode
         case 'D':
           debugMode = true;
+          System.out.println("DEBUG ON");
           break;
         //verbose
         case 'V':
           verboseMode = true;
+          System.out.println("VERBOSE ON");
           break;
         //shared lib
         case 'S':
@@ -99,6 +102,10 @@ public class MakeFileTemplate{
       return;
     }
     else if(curPath.isDirectory()){
+      if(pathString != null){
+        if(verboseMode)System.out.println("Dir Found: " + pathString+curPath.getName()+"/");
+        dirs.add(pathString+curPath.getName()+"/");
+      }
       for(File file : curPath.listFiles()){
 
         getFileStruct(file,(pathString == null)?"":pathString+curPath.getName()+"/");
@@ -127,11 +134,17 @@ public class MakeFileTemplate{
       for(FileInfo info : targets){
         printWriter.printf("$(binDIR)%s ",info.getObjName());
       }
-      printWriter.printf("\n");
-
+      printWriter.printf("\n\n");
 
       //main executable
-      printWriter.printf("all:$(binDIR)%s\n\n",executableName);
+      printWriter.printf("all:init $(binDIR)%s\n\n",executableName);
+      
+      printWriter.printf("init:\n");
+      for(String dir : dirs){
+        printWriter.printf("\tmkdir -p $(binDIR)" + dir + "\n");
+      }
+      printWriter.printf("\n");
+
       printWriter.printf("$(binDIR)%s:$(objects)\n",executableName);
       printWriter.printf("\t$(CC) $(CFLAGS) -I$(includeDIR) %s $(objects) -o $@", (sharedLib)? "-shared": "");
 
@@ -143,7 +156,7 @@ public class MakeFileTemplate{
       }
       //write the clean function
       printWriter.printf("\n\nclean:\n");
-      printWriter.printf("\trm -rf $(binDir)*\n");
+      printWriter.printf("\trm -rf $(binDIR)*\n");
       //write run and memtest
       printWriter.printf("\nrun: all\n");
       printWriter.printf("\t./$(binDIR)%s\n",executableName);
