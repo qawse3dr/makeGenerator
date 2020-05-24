@@ -13,12 +13,12 @@ a small cli program maked in java to quicky generate a makefile based on a file 
 
 ## IN FILE Commands
 To select names and flags for specific files add a comment in any file or header with this format
-`
-/*make
-  flags: put flags here
-  name: outputFile.o
- */
-`
+
+/*make  
+  flags: put flags here  
+  name: outputFile.o  
+*/
+  
 
 ## Commands
 | Command | Option          | Description                       | Default Value |
