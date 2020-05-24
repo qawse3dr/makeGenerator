@@ -70,13 +70,14 @@ public class MakeFileTemplate{
           break;
         //src dir
         case "s":
-          srcDir = entry.getValue() + "/";
+          srcDir = entry.getValue();
           break;
         case "b":
-          binDir = entry.getValue() + "/";
+          binDir = entry.getValue();
           break;
         case "i":
-          includeDIR = entry.getValue()+"/";
+          includeDIR = entry.getValue();
+          break;
         default:
           throw new  InvalidOperation(entry.getKey().charAt(0));
       }
@@ -138,7 +139,7 @@ public class MakeFileTemplate{
 
       //main executable
       printWriter.printf("all:init $(binDIR)%s\n\n",executableName);
-      
+
       printWriter.printf("init:\n");
       for(String dir : dirs){
         printWriter.printf("\tmkdir -p $(binDIR)" + dir + "\n");

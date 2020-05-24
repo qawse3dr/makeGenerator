@@ -25,7 +25,12 @@ public class FileInfo {
     this.path = path;
     this.srcName = file.getName();
     //assume you are using c
-    this.objName = file.getName().replace(".c",".o");
+    if(file.getName().endsWith(".c")){
+      this.objName = file.getName().replace(".c",".o");
+    } else if(file.getName().endsWith(".cpp")){
+      this.objName = file.getName().replace(".cpp",".o");
+
+    }
 
     //opens file and looks for dependances
     Scanner in = null;
