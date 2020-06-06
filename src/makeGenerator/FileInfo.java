@@ -43,8 +43,10 @@ public class FileInfo {
           if(mft.verboseMode){
             System.out.println("\tFound Header: " + line.split("\"")[1]);
           }
-          //gets value after first "
-          includes.add(line.split("\"")[1]);
+          //makes sure it is not already in the include folder
+          if(!includes.contains(line.split("\"")[1])){
+            includes.add(line.split("\"")[1]);
+          }
           //gets the dependances from the header
           getInfoFromHeader(new File(mft.getPath()+mft.getIncludesDir()+"/"+line.split("\"")[1]),mft);
         }
@@ -89,8 +91,11 @@ public class FileInfo {
           if(mft.verboseMode){
             System.out.println("\tFound Header: " + line.split("\"")[1]);
           }
-          //gets value after first "
-          includes.add(line.split("\"")[1]);
+          //makes sure it is not already in the include folder
+          if(!includes.contains(line.split("\"")[1])){
+            includes.add(line.split("\"")[1]);
+          }
+
           //gets the dependances from the header
           getInfoFromHeader(new File(mft.getPath()+mft.getIncludesDir()+"/"+line.split("\"")[1]),mft);
         }
