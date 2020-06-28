@@ -89,15 +89,17 @@ public class FileInfo {
         //custom include
         if(line.startsWith("#include") && line.contains("\"")){
           if(mft.verboseMode){
-            System.out.println("\tFound Header: " + line.split("\"")[1]);
+            System.out.print("\tFound Header: " + line.split("\"")[1]);
+            if(!includes.contains(line.split("\"")[1])) System.out.println(": Already Found");
+            else System.out.println();
           }
           //makes sure it is not already in the include folder
           if(!includes.contains(line.split("\"")[1])){
             includes.add(line.split("\"")[1]);
+            //gets the dependances from the header
+            getInfoFromHeader(new File(mft.getPath()+mft.getIncludesDir()+"/"+line.split("\"")[1]),mft);
           }
 
-          //gets the dependances from the header
-          getInfoFromHeader(new File(mft.getPath()+mft.getIncludesDir()+"/"+line.split("\"")[1]),mft);
         }
         else if(line.toLowerCase().startsWith("/*make")){
           if(mft.verboseMode){
