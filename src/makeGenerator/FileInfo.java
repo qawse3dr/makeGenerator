@@ -90,7 +90,7 @@ public class FileInfo {
         if(line.startsWith("#include") && line.contains("\"")){
           if(mft.verboseMode){
             System.out.print("\tFound Header: " + line.split("\"")[1]);
-            if(!includes.contains(line.split("\"")[1])) System.out.println(": Already Found");
+            if(includes.contains(line.split("\"")[1])) System.out.println(": Already Found");
             else System.out.println();
           }
           //makes sure it is not already in the include folder
