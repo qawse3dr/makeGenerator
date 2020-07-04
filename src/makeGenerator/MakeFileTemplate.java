@@ -165,7 +165,7 @@ public class MakeFileTemplate{
       //creates directorys
       printWriter.printf("init: " + config.getInitFunctions() +"\n");
       for(String dir : dirs){
-        printWriter.printf("\tmkdir -p $(binDIR) $(buildDIR)" + dir + "\n");
+        printWriter.printf("\tmkdir -p $(binDIR)" + dir + "\n");
       }
       printWriter.printf("\n");
 
@@ -181,6 +181,8 @@ public class MakeFileTemplate{
       //write the clean function
       printWriter.printf("\n\nclean:\n");
       printWriter.printf("\trm -rf $(binDIR)*\n");
+      printWriter.printf("\trm -rf $(buildDIR)*\n");
+
       //write run and memtest
       printWriter.printf("\nrun: all\n");
       printWriter.printf("\t./$(binDIR)%s\n",executableName);
