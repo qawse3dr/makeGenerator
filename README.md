@@ -34,3 +34,47 @@ To select names and flags for specific files add a comment in any file or header
 | -s      | Source Files    | The folder src files are in       | src/          |
 | -b      | Bin files       | Where exe and .o files are stored | bin/          |
 | -i      | Includes folder | Where header are stored           | includes/     |
+| -config | makeConfig      | Location of config file           | NULL          |
+
+## Config file
+### Custom variables
+  `var CUSTOMVAR=value`
+  
+### Custom if statements
+  ```
+  @if
+  ifeq (condition)
+    echo "if statement"
+  endif
+  @endif
+  ```
+### Custom function statements
+  ```
+  @fun
+  move:
+    cp foo bar
+  @endfun
+  ```
+### Custom init functions (functions called when init is called)
+  ```
+  @initfun
+  funName1
+  funName2
+  funName3
+  @endinitfun
+  ```
+  
+## Layout of generated make file
+  Generated Vars
+  CustomVars
+  
+  Custom If statements
+  
+  all
+  exe
+  files targets
+  
+  clean
+  
+  custom functions
+
