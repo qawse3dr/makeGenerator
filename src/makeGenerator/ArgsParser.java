@@ -42,12 +42,10 @@ public class ArgsParser{
 
 
             isValue = true;
-            operation = string.substring(1);
+            operation = string.substring(i);
+            break;
 
-            //error operation cant be longer then one flag due to expected value.
-            if(string.length() != 2){
-              throw new InvalidSyntax(string);
-            }
+
           } else if(Character.isUpperCase(string.charAt(i))){
             commands += string.charAt(i);
           //invalid syntex
