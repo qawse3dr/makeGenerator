@@ -185,10 +185,10 @@ public class MakeFileTemplate{
 
       //write run and memtest
       printWriter.printf("\nrun: all\n");
-      printWriter.printf("\t./$(binDIR)%s\n",executableName);
+      printWriter.printf("\t./$(buildDIR)%s\n",executableName);
 
       printWriter.printf("\nmemtest: all\n");
-      printWriter.printf("\tvalgrind ./$(binDIR)%s\n",executableName);
+      printWriter.printf("\tvalgrind ./$(buildDIR)%s\n",executableName);
 
       //write customs functions if there is any
       printWriter.printf("\n%s\n",config.getCustomFunctions());
